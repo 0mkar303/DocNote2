@@ -1,4 +1,4 @@
-﻿using DocNotes.Data;
+using DocNotes.Data;
 using DocNotes.Middlewares;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
