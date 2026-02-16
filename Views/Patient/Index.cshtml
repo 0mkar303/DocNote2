@@ -1,0 +1,114 @@
+﻿@model IEnumerable<DocNotes.Models.Patient>
+
+<h2 class="mb-3">Patients</h2>
+
+<form method="get" class="mb-3 d-flex gap-2">
+    <input type="text"
+           name="search"
+           value="@Context.Request.Query["search"]"
+           class="form-control"
+           placeholder="Search by name" />
+
+    <button type="submit" class="btn btn-primary">
+        Search
+    </button>
+</form>
+
+<!-- ================= DESKTOP TABLE ================= -->
+<div class="table-responsive d-none d-md-block">
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td>@p.FullName</td>
+                    <td>@p.Phone</td>
+                    <td>@p.Email</td>
+                    <td>
+                        <a asp-action="Details"
+                           asp-route-id="@p.PatientId"
+                           class="btn btn-sm btn-outline-primary">
+                            View
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- ================= MOBILE CARDS ================= -->
+<div class="d-block d-md-none">
+    @foreach (var p in Model)
+    {
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-1">@p.FullName</h5>
+
+                <p class="mb-1">
+                    📞 <strong>@p.Phone</strong>
+                </p>
+
+                <p class="mb-2 text-muted">
+                    ✉️ @p.Email
+                </p>
+
+                <a asp-action="Details"
+                   asp-route-id="@p.PatientId"
+                   class="btn btn-primary btn-sm w-100">
+                    View Patient
+                </a>
+            </div>
+        </div>
+    }
+</div>
+<!-- ================= PAGINATION ================= -->
+@if (ViewBag.TotalPages > 1)
+{
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+
+            <!-- Previous -->
+            <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-page="@(ViewBag.CurrentPage - 1)"
+                   asp-route-search="@Context.Request.Query["search"]">
+                    Previous
+                </a>
+            </li>
+
+            <!-- Page Numbers -->
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-page="@i"
+                       asp-route-search="@Context.Request.Query["search"]">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <!-- Next -->
+            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-page="@(ViewBag.CurrentPage + 1)"
+                   asp-route-search="@Context.Request.Query["search"]">
+                    Next
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+}

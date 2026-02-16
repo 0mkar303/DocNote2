@@ -1,0 +1,76 @@
+﻿@model IEnumerable<DocNotes.Models.History>
+
+@{
+    ViewData["Title"] = "Activity History";
+    var groupedHistory = Model
+        .GroupBy(h => h.ActionDate.Date)
+        .OrderByDescending(g => g.Key);
+
+    string search = ViewBag.Search as string;
+}
+
+<h2>🕒 Activity History</h2>
+
+<!-- SEARCH BAR -->
+<form method="get" class="mb-4">
+    <input type="text"
+           name="search"
+           value="@search"
+           class="form-control w-50 d-inline-block"
+           placeholder="🔍 Search patient name..." />
+
+    <button type="submit" class="btn btn-primary ms-2">
+        Search
+    </button>
+
+    @if (!string.IsNullOrEmpty(search))
+    {
+        <a asp-action="Index" class="btn btn-secondary ms-2">
+            Clear
+        </a>
+    }
+</form>
+
+<!-- HISTORY LIST -->
+@foreach (var dayGroup in groupedHistory)
+{
+    <div class="mt-4">
+        <h5 class="text-primary">
+            📅 @dayGroup.Key.ToString("dd MMM yyyy")
+        </h5>
+
+        <ul class="list-group mt-2">
+            @foreach (var h in dayGroup)
+            {
+                <li class="list-group-item">
+                    <strong>
+                        @(h.ActionDate.AddMinutes(330).ToString("dd-MMMM-yyyy HH:mm"))
+
+                    </strong>
+                    —
+                    <strong>@h.Doctor.FullName</strong>
+                    @RenderActionText(h.Action)
+                    for
+                    <a asp-controller="Patient"
+                       asp-action="Details"
+                       asp-route-id="@h.PatientId"
+                       class="fw-bold text-decoration-none">
+                        @h.Patient.FullName
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+}
+@functions {
+    string RenderActionText(string action)
+    {
+        if (action.Contains("Added"))
+            return "🩺 added a clinical note";
+
+        if (action.Contains("Updated") || action.Contains("Edited"))
+            return "✏️ updated a clinical note";
+
+        return action;
+    }
+}

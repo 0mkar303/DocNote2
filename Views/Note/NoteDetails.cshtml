@@ -1,0 +1,70 @@
+﻿@model DocNotes.Models.Note
+
+@{
+    ViewData["Title"] = "Note Details";
+}
+
+<h2>Clinical Note Details</h2>
+
+<hr />
+
+<div>
+    <p><b>Doctor:</b> @Model.Doctor.FullName</p>
+    <p><b>Patient:</b> @Model.Patient.FullName</p>
+    <p><b>Date:</b> @Model.CreatedOn.ToString("dd-MMM-yyyy HH:mm")</p>
+</div>
+
+<hr />
+
+<div>
+    <h4>Note Text</h4>
+    <pre style="background:#f5f5f5; padding:15px; border-radius:5px;">
+@Model.NoteText
+    </pre>
+</div>
+
+<hr />
+
+@if (!string.IsNullOrEmpty(Model.FilePath))
+{
+    <a class="btn btn-primary"
+       asp-action="Download"
+       asp-route-noteId="@Model.NoteId">
+        Download Note File
+    </a>
+}
+
+@if (User.Identity.IsAuthenticated && Model.Doctor.UserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+{
+    <a class="btn btn-warning"
+       asp-action="Edit"
+       asp-route-noteId="@Model.NoteId">
+        Edit Note
+    </a>
+}
+
+<a class="btn btn-secondary"
+   asp-controller="Patient"
+   asp-action="Details"
+   asp-route-id="@Model.PatientId">
+    Back to Patient
+</a>
+@if (User.Identity.IsAuthenticated && Model.Doctor.UserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+{
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" name="noteId" value="@Model.NoteId" />
+        <button type="submit" class="btn btn-danger"
+                onclick="return confirm('Are you sure you want to delete this note?');">
+            Delete Note
+        </button>
+    </form>
+
+}
+
+@* <form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" name="noteId" value="@Model.NoteId" />
+    <button type="submit" class="btn btn-danger"
+            onclick="return confirm('Are you sure you want to delete this note?');">
+        Delete Note
+    </button>
+</form> *@

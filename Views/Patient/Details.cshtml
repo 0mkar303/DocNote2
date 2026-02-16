@@ -1,0 +1,102 @@
+﻿@model DocNotes.Models.Patient
+
+<h2>Patient Profile</h2>
+
+<hr />
+
+<h4>Patient Information</h4>
+<p><strong>Name:</strong> @Model.FullName</p>
+<p><strong>Phone:</strong> @Model.Phone</p>
+<p><strong>Email:</strong> @Model.Email</p>
+<p><strong>Blood Group:</strong> @Model.BloodGroup</p>
+
+
+
+<hr />
+
+<h4>Clinical Notes</h4>
+<a asp-controller="Note" asp-action="Create"
+   asp-route-patientId="@Model.PatientId"
+   class="btn btn-success">
+    ➕ Add Note
+</a>
+
+<hr />
+
+@if (Model.Notes != null && Model.Notes.Any())
+{
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                @*  <th>Doctor</th> *@
+                <th>Note</th>
+                <th>Notes View</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var note in Model.Notes)
+            {
+                <tr>
+                    <td>
+                        @* @note.CreatedOn.ToString("dd-MMM-yyyy") *@
+                        @(note.CreatedOn.AddMinutes(330).ToString("dd-MMMM-yyyy HH:mm"))
+
+                    </td>
+                    @*  <td>@note.Doctor?.FullName</td> *@
+                    @*  <td>@note.NoteText</td> *@
+                    <td>
+                        @{
+                            var words = note.NoteText?.Split(' ');
+                            if (words != null && words.Length > 6)
+                            {
+                                @string.Join(" ", words.Take(6))
+
+                                <text>...</text>
+                            }
+                            else
+                            {
+                                @note.NoteText
+                            }
+                        }
+                    </td>
+
+                    <td>
+                        <a asp-controller="Note"
+                           asp-action="Details"
+                           asp-route-noteId="@note.NoteId">
+                            View Note
+                        </a>
+                    </td>
+
+
+                    <td>
+                        <a asp-controller="Note" asp-action="Download"
+                           asp-route-noteId="@note.NoteId"
+                           class="btn btn-sm btn-outline-primary">
+                            ⬇ Download Note
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-controller="Note" asp-action="Edit"
+                           asp-route-noteId="@note.NoteId"
+                           class="btn btn-sm btn-warning">
+                            ✏️ Edit
+                        </a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No notes available.</p>
+}
+
+<hr />
+
+<a asp-action="Index">⬅ Back to Patient List</a>

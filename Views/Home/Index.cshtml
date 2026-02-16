@@ -1,0 +1,97 @@
+﻿﻿@{
+ViewData["Title"] = "Doctor Dashboard";
+}
+
+<div class="container mt-4">
+
+    <!-- HERO SECTION -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-8">
+            @*  <h1 class="fw-bold">Welcome, Doctor 👨‍⚕️</h1> *@
+
+            <h4 class="fw-bold">
+                Welcome, @User.Identity?.Name 👨‍⚕️
+            </h4>
+
+
+
+        </div>
+
+        <!-- DASHBOARD CARDS -->
+        <div class="row g-4">
+
+            <!-- PATIENTS -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <h3 class="mb-3">👥 Patients</h3>
+                        <p class="text-muted">
+                            View and manage patient records.
+                            Search patients and view clinical details.
+                        </p>
+                        <a asp-controller="Patient"
+                           asp-action="Index"
+                           class="btn btn-primary w-100">
+                            Go to Patients
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            @*    <!-- NOTES -->
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h3 class="mb-3">📝 Clinical Notes</h3>
+                    <p class="text-muted">
+                        Add and manage clinical notes.
+                        Supports voice input and text storage.
+                    </p>
+                    <a asp-controller="Patient"
+                       asp-action="Index"
+                       class="btn btn-success w-100">
+                        Create Notes
+                    </a>
+                </div>
+            </div>
+        </div> *@
+
+            <!-- HISTORY -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <h3 class="mb-3">🕒 History</h3>
+                        <p class="text-muted">
+                            View complete activity history.
+                            Track note creation and updates.
+                        </p>
+                        <a asp-controller="History"
+                           asp-action="Index"
+                           class="btn btn-warning w-100">
+                            View History
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        @*  <!-- HOW IT WORKS -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="mb-3">🔍 How the System Works</h4>
+                    <ol class="mb-0">
+                        <li>Doctor logs in using secure authentication</li>
+                        <li>Selects a patient from the patient list</li>
+                        <li>Adds clinical notes using voice or text</li>
+                        <li>Notes are stored securely in database and file</li>
+                        <li>All actions are logged in history for auditing</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div> *@
+
+    </div>

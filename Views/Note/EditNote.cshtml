@@ -1,0 +1,92 @@
+﻿@model DocNotes.Models.Note
+
+@{
+    ViewData["Title"] = "Edit Note";
+}
+
+<h2>Edit Clinical Note</h2>
+
+<form asp-controller="Note" asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+
+    <!-- Hidden fields -->
+    <input type="hidden" asp-for="NoteId" />
+    <input type="hidden" asp-for="PatientId" />
+    <input type="hidden" asp-for="DoctorId" />
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label>Clinical Note</label>
+        <textarea id="noteText"
+                  name="NoteText"
+                  class="form-control"
+                  rows="5"
+                  placeholder="Type or use voice...">@Model.NoteText</textarea>
+    </div>
+
+    <br />
+
+    <button type="button" class="btn btn-info" onclick="startVoice()">
+        🎤 Start Voice
+    </button>
+
+    <button type="button" class="btn btn-warning" onclick="stopVoice()">
+        ⏹ Stop Voice
+    </button>
+
+    <button type="submit" class="btn btn-primary">
+        💾 Update Note
+    </button>
+
+    <a asp-controller="Patient" asp-action="Details"
+       asp-route-id="@Model.PatientId"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+</form>
+
+<script>
+    let recognition;
+    let isRecording = false;
+
+    function startVoice() {
+        if (!('webkitSpeechRecognition' in window)) {
+            alert("Please use Google Chrome for voice input.");
+            return;
+        }
+
+        recognition = new webkitSpeechRecognition();
+        recognition.lang = "en-US";
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onresult = function (event) {
+            let finalText = "";
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                if (event.results[i].isFinal) {
+                    finalText += event.results[i][0].transcript + " ";
+                }
+            }
+            document.getElementById("noteText").value += finalText;
+        };
+
+        recognition.onerror = function (e) {
+            console.error("Speech error:", e);
+        };
+
+        recognition.start();
+        isRecording = true;
+    }
+
+    function stopVoice() {
+        if (recognition && isRecording) {
+            recognition.stop();
+            isRecording = false;
+        }
+    }
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
