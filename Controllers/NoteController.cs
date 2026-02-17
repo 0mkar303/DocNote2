@@ -111,7 +111,8 @@ Date : {DateTime.Now}
                 }
 
                 // 11. Show user-friendly message
-                ModelState.AddModelError("", "Unable to save note. Please try again.");
+                //ModelState.AddModelError("", "Unable to save note. Please try again.");
+                return Content(ex.ToString());
                 ViewBag.PatientId = patientId;
                 return View("CreateNote");
             }
